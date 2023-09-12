@@ -6,8 +6,8 @@
   "author": "CrazyChenzi",
   "license": "MIT",
   "scripts": {
-    "docs:dev": "vuepress dev docs",
-    "docs:build": "vuepress build docs",
+    "start": "vuepress dev docs",
+    "build": "vuepress build docs",
     "version": "conventional-changelog -p angular -i CHANGELOG.md -s -r 0 && git add CHANGELOG.md",
     "prepare": "husky install"
   },
