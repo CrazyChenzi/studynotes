@@ -1,7 +1,3 @@
----
-sidebarDepth: 0
----
-
 # Vue3 Compiler 优化细节
 
 [渲染机制 ｜ Vue.js](https://cn.vuejs.org/guide/extras/rendering-mechanism.html#compiler-informed-virtual-dom)
