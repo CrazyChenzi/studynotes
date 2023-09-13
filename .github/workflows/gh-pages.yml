@@ -25,12 +25,9 @@ jobs:
         run: yarn build
 
       - name: Deploy to GitHub Pages
-        env:
-          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        run: |
-          git config --global user.email "756319278@qq.com"
-          git config --global user.name "CrazyChenzi"
-          git checkout --orphan gh-pages
-          git --work-tree=docs/.vuepress/dist add --all
-          git --work-tree=docs/.vuepress/dist commit -m "Deploy VuePress to GitHub Pages"
-          git push origin HEAD:gh-pages --force
+        uses: peaceiris/actions-gh-pages@v3
+        with:
+          github_token: ${{ secrets.ACCESS_TOKEN }}
+          publish_dir: docs/.vuepress/dist
+          force_orphan: true
+          cname: https://crazychenzi.github.io/studynotes
