@@ -1,17 +1,36 @@
-name: Build and Deploy
-on: [push]
+name: Deploy VuePress
+
+on:
+  push:
+    branches:
+      - main
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
-    steps:
-    - name: Checkout
-      uses: actions/checkout@main
 
-    - name: vuepress-deploy
-      uses: jenkey2011/vuepress-deploy@master
-      env:
-        ACCESS_TOKEN: ${{ secrets.ACCESS_TOKEN }}
-        TARGET_REPO: username/repo
-        TARGET_BRANCH: main
-        BUILD_SCRIPT: yarn && yarn build
-        BUILD_DIR: studynotes/.vuepress/dist/
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v2
+        with:
+          node-version: 16
+
+      - name: Install dependencies
+        run: yarn
+
+      - name: Build VuePress
+        run: yarn build
+
+      - name: Deploy to GitHub Pages
+        env:
+          GITHUB_TOKEN: ${{ secrets.ACCESS_TOKEN }}
+        run: |
+          git config --global user.email "756319278@qq.com"
+          git config --global user.name "CrazyChenzi"
+          git checkout --orphan gh-pages
+          git --work-tree=docs/.vuepress/dist add --all
+          git --work-tree=docs/.vuepress/dist commit -m "Deploy VuePress to GitHub Pages"
+          git push origin HEAD:gh-pages --force
