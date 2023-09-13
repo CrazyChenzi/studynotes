@@ -1,5 +1,5 @@
 export default {
-  base: '/',
+  base: '/studynotes/',
   title: 'StudyNotes',
   description: `CrazyChenzi's study notes, unlike blogs, are essays, only about code`,
   themeConfig: {
