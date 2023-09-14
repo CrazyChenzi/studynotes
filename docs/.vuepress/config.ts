@@ -12,7 +12,7 @@ export default {
           '/vueSourceCode/Vue3 Compiler 优化细节.md',
           '/vueSourceCode/从 compile 和 runtime 来看组件的第一次 patch.md',
           // '/vueSourceCode/从 patch 方法来看 diff 算法.md',
-          // '/vueSourceCode/Vue3 源码解读之 teleport.md',
+          '/vueSourceCode/Vue3 源码解读之 teleport.md',
         ]
       },
     ],
