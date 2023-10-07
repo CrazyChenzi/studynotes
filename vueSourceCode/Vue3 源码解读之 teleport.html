@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en-US">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <title>Vue3 源码解读之 teleport | StudyNotes</title>
+    <meta name="generator" content="VuePress 1.9.10">
+    <link rel="icon" type="image/png" sizes="16x16" href="/studynotes/imgs/鸡尾酒.png">
+    <meta name="description" content="CrazyChenzi&#39;s study notes, unlike blogs, are essays, only about code">
+    
+    <link rel="preload" href="/studynotes/assets/css/0.styles.b27df33a.css" as="style"><link rel="preload" href="/studynotes/assets/js/app.3d955cb7.js" as="script"><link rel="preload" href="/studynotes/assets/js/2.007e39c9.js" as="script"><link rel="preload" href="/studynotes/assets/js/1.02c32e63.js" as="script"><link rel="preload" href="/studynotes/assets/js/25.831915f1.js" as="script"><link rel="prefetch" href="/studynotes/assets/js/10.541f3cad.js"><link rel="prefetch" href="/studynotes/assets/js/11.c6588e7e.js"><link rel="prefetch" href="/studynotes/assets/js/12.918248b0.js"><link rel="prefetch" href="/studynotes/assets/js/13.bf000e6d.js"><link rel="prefetch" href="/studynotes/assets/js/14.1bac91e0.js"><link rel="prefetch" href="/studynotes/assets/js/15.1172bf50.js"><link rel="prefetch" href="/studynotes/assets/js/16.d211645d.js"><link rel="prefetch" href="/studynotes/assets/js/17.ecbf9cc6.js"><link rel="prefetch" href="/studynotes/assets/js/18.f646c752.js"><link rel="prefetch" href="/studynotes/assets/js/19.aba437c7.js"><link rel="prefetch" href="/studynotes/assets/js/20.4b4a7f9d.js"><link rel="prefetch" href="/studynotes/assets/js/21.8ee70ab5.js"><link rel="prefetch" href="/studynotes/assets/js/22.1489098c.js"><link rel="prefetch" href="/studynotes/assets/js/23.e6adf6f4.js"><link rel="prefetch" href="/studynotes/assets/js/24.130d023e.js"><link rel="prefetch" href="/studynotes/assets/js/26.e2e4e3d9.js"><link rel="prefetch" href="/studynotes/assets/js/27.f89d87c6.js"><link rel="prefetch" href="/studynotes/assets/js/3.ce2fe7f0.js"><link rel="prefetch" href="/studynotes/assets/js/4.0eb6d140.js"><link rel="prefetch" href="/studynotes/assets/js/5.bf6a3be0.js"><link rel="prefetch" href="/studynotes/assets/js/6.d295d44b.js"><link rel="prefetch" href="/studynotes/assets/js/7.bfd58751.js"><link rel="prefetch" href="/studynotes/assets/js/vendors~docsearch.4f1414c9.js">
+    <link rel="stylesheet" href="/studynotes/assets/css/0.styles.b27df33a.css">
+  </head>
+  <body>
+    <div id="app" data-server-rendered="true"><div class="theme-container"><header class="navbar"><div class="sidebar-button"><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" role="img" viewBox="0 0 448 512" class="icon"><path fill="currentColor" d="M436 124H12c-6.627 0-12-5.373-12-12V80c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12zm0 160H12c-6.627 0-12-5.373-12-12v-32c0-6.627 5.373-12 12-12h424c6.627 0 12 5.373 12 12v32c0 6.627-5.373 12-12 12z"></path></svg></div> <a href="/studynotes/" class="home-link router-link-active"><img src="/studynotes/imgs/鸡尾酒.svg" alt="StudyNotes" class="logo"> <span class="site-name can-hide">StudyNotes</span></a> <div class="links"><div class="search-box"><input aria-label="Search" autocomplete="off" spellcheck="false" value=""> <!----></div> <!----></div></header> <div class="sidebar-mask"></div> <aside class="sidebar"><!---->  <ul class="sidebar-links"><li><section class="sidebar-group collapsable depth-0"><p class="sidebar-heading open"><span>Vue3.0 源码阅读</span> <span class="arrow down"></span></p> <ul class="sidebar-links sidebar-group-items"><li><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html" class="sidebar-link">Vue3 Compiler 优化细节</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#block、block-tree-和-patchflags-是什么" class="sidebar-link">Block、Block Tree 和 PatchFlags 是什么</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#block-vnode-是如何创建的" class="sidebar-link">Block VNode 是如何创建的</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#block-配合-patchflags-做到靶向更新" class="sidebar-link">Block 配合 PatchFlags 做到靶向更新</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#不稳定的-block-tree" class="sidebar-link">不稳定的 Block Tree</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#静态提升" class="sidebar-link">静态提升</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#cache-event-handler" class="sidebar-link">Cache Event handler</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 Compiler 优化细节.html#参考" class="sidebar-link">参考：</a></li></ul></li><li><a href="/studynotes/vueSourceCode/从 compile 和 runtime 来看组件的第一次 patch.html" class="sidebar-link">从 compile 和 runtime 来看组件的第一次 patch</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 compile 和 runtime 来看组件的第一次 patch.html#什么是-shapflag" class="sidebar-link">什么是 shapFlag</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 compile 和 runtime 来看组件的第一次 patch.html#组件的创建过程" class="sidebar-link">组件的创建过程</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 compile 和 runtime 来看组件的第一次 patch.html#patch-对组件的处理" class="sidebar-link">patch 对组件的处理</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 compile 和 runtime 来看组件的第一次 patch.html#总结" class="sidebar-link">总结：</a></li></ul></li><li><a href="/studynotes/vueSourceCode/从 patch 方法来看 diff 算法.html" class="sidebar-link">从 patch 方法来看 diff 算法</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 patch 方法来看 diff 算法.html#副作用函数更新组件的过程" class="sidebar-link">副作用函数更新组件的过程</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 patch 方法来看 diff 算法.html#patch-流程" class="sidebar-link">patch 流程</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 patch 方法来看 diff 算法.html#总结" class="sidebar-link">总结</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/从 patch 方法来看 diff 算法.html#拓展" class="sidebar-link">拓展</a></li></ul></li><li><a href="/studynotes/vueSourceCode/Vue3 源码解读之 teleport.html" class="active sidebar-link">Vue3 源码解读之 teleport</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 源码解读之 teleport.html#源码分析" class="sidebar-link">源码分析</a></li></ul></li><li><a href="/studynotes/vueSourceCode/Vue3 的响应式核心 reactive 和 effect 实现原理以及源码分析.html" class="sidebar-link">Vue3 的响应式核心 reactive 和 effect 实现原理以及源码分析</a><ul class="sidebar-sub-headers"><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 的响应式核心 reactive 和 effect 实现原理以及源码分析.html#reactive-和-effect" class="sidebar-link">reactive 和 effect</a></li><li class="sidebar-sub-header"><a href="/studynotes/vueSourceCode/Vue3 的响应式核心 reactive 和 effect 实现原理以及源码分析.html#源码" class="sidebar-link">源码</a></li></ul></li></ul></section></li></ul> </aside> <main class="page"> <div class="theme-default-content content__default"><h1 id="vue3-源码解读之-teleport"><a href="#vue3-源码解读之-teleport" class="header-anchor">#</a> Vue3 源码解读之 teleport</h1> <p><a href="https://cn.vuejs.org/guide/built-ins/teleport.html" target="_blank" rel="noopener noreferrer">Teleport | Vue.js<span><svg xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false" x="0px" y="0px" viewBox="0 0 100 100" width="15" height="15" class="icon outbound"><path fill="currentColor" d="M18.8,85.1h56l0,0c2.2,0,4-1.8,4-4v-32h-8v28h-48v-48h28v-8h-32l0,0c-2.2,0-4,1.8-4,4v56C14.8,83.3,16.6,85.1,18.8,85.1z"></path> <polygon fill="currentColor" points="45.7,48.7 51.3,54.3 77.2,28.5 77.2,37.2 85.2,37.2 85.2,14.9 62.8,14.9 62.8,22.9 71.5,22.9"></polygon></svg> <span class="sr-only">(opens new window)</span></span></a></p> <p><code>&lt;Teleport&gt;</code> 是一个内置组件，它可以将一个组件内部的一部分模板“传送”到该组件的 DOM 结构外层的位置去。</p> <blockquote><p>有时我们可能会遇到这样的场景：一个组件模板的一部分在逻辑上从属于该组件，但从整个应用视图的角度来看，它在 DOM 中应该被渲染在整个 Vue 应用外部的其他地方。</p></blockquote> <p>一个比较经典的场景是创建一个包含全屏模式的对话框组件，用于遮罩。在大多数情况下，我们希望对话框的逻辑存在于组件中，但是对话框的定位 CSS 是一个很大的问题，它非常容易受到外层父组件的 CSS 影响。此时我们可能更希望将对话框  append  到 dom 的其它地方，比如 body。这个时候我们可以去使用 teleport 组件。具体用法如下：</p> <p>teleport  有两个 props：</p> <ul><li>to: 的值可以是一个 CSS 选择器字符串，也可以是一个 DOM 元素对象，用于 teleport 后续的移动位置</li> <li>disabled：是否移动到目标节点</li></ul> <div class="language-vue extra-class"><pre class="language-vue"><code><span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>open = true<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>Open Modal<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+
+<span class="token comment">&lt;!-- 传递到  body  下 --&gt;</span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>Teleport</span> <span class="token attr-name">to</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>body<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>div</span> <span class="token attr-name">v-if</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>open<span class="token punctuation">&quot;</span></span> <span class="token attr-name">class</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>modal<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>p</span><span class="token punctuation">&gt;</span></span>Hello from the modal!<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>p</span><span class="token punctuation">&gt;</span></span>
+    <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;</span>button</span> <span class="token attr-name">@click</span><span class="token attr-value"><span class="token punctuation attr-equals">=</span><span class="token punctuation">&quot;</span>open = false<span class="token punctuation">&quot;</span></span><span class="token punctuation">&gt;</span></span>Close<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>button</span><span class="token punctuation">&gt;</span></span>
+  <span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>div</span><span class="token punctuation">&gt;</span></span>
+<span class="token tag"><span class="token tag"><span class="token punctuation">&lt;/</span>Teleport</span><span class="token punctuation">&gt;</span></span>
+</code></pre></div><p>根据上面的代码我们可以思考一下 teleport 的是如何创建的，首先我们在真实 dom 中并未看见 teleport 的节点，因此可以推断出 teleport 是由 createComment 创建出的注释节点。</p> <p>接下来我们可以从一个简易化的 teleport  来思考一下  teleport  的一个大致渲染流程：</p> <p>源码位置：packages/runtime-core/src/components/Teleport.ts</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">const</span> TeleportImpl <span class="token operator">=</span> <span class="token punctuation">{</span>
+    <span class="token comment">// Teleport 组件独有的特性，用作标识</span>
+    <span class="token literal-property property">__isTeleport</span><span class="token operator">:</span> <span class="token boolean">true</span><span class="token punctuation">,</span>
+    
+    <span class="token comment">// 渲染 Teleport 组件</span>
+    <span class="token function">process</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    
+    <span class="token comment">// 移除 Teleport</span>
+    <span class="token function">remove</span><span class="token punctuation">(</span><span class="token punctuation">)</span> <span class="token punctuation">{</span><span class="token punctuation">}</span><span class="token punctuation">,</span>
+    <span class="token comment">//  移动 Teleport</span>
+    <span class="token literal-property property">move</span><span class="token operator">:</span> moveTeleport<span class="token punctuation">,</span>
+    <span class="token comment">// 服务端渲染 Teleport</span>
+    <span class="token literal-property property">hydrate</span><span class="token operator">:</span> hydrateTeleport
+<span class="token punctuation">}</span>
+
+<span class="token keyword">export</span> <span class="token keyword">const</span> Teleport <span class="token operator">=</span> TeleportImpl <span class="token keyword">as</span> unknown <span class="token keyword">as</span> <span class="token punctuation">{</span>
+    <span class="token literal-property property">__isTeleport</span><span class="token operator">:</span> <span class="token boolean">true</span>
+    <span class="token keyword">new</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+        <span class="token literal-property property">$props</span><span class="token operator">:</span> VNodeProps <span class="token operator">&amp;</span> TeleportProps
+        <span class="token literal-property property">$slots</span><span class="token operator">:</span> <span class="token punctuation">{</span>
+            <span class="token keyword">default</span><span class="token punctuation">(</span><span class="token punctuation">)</span><span class="token operator">:</span> VNode<span class="token punctuation">[</span><span class="token punctuation">]</span>
+        <span class="token punctuation">}</span>
+    <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p><img src="/studynotes/assets/img/teleport.684904b8.png" alt="teleport.png"></p> <p>接下来我们从源码分析 teleport 组件的运行机制。</p> <h2 id="源码分析"><a href="#源码分析" class="header-anchor">#</a> 源码分析</h2> <p>源码位置：packages/runtime-core/src/components/Teleport.ts</p> <p>源码位置：packages/runtime-core/src/renderer.ts</p> <h3 id="创建时"><a href="#创建时" class="header-anchor">#</a> 创建时</h3> <p>我们从  runtime  运行时的 patch 来进行分析 patch  会根据不同的shapeFlag来处理不同的逻辑，当命中  teleport 时开始调用TeleportImpl.process 方法对  teleport 里面的内容进行处理</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> ShapeFlags<span class="token punctuation">.</span><span class="token constant">TELEPORT</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 当  ShapeFlags 为 teleport</span>
+  <span class="token punctuation">;</span><span class="token punctuation">(</span>type <span class="token keyword">as</span> <span class="token keyword">typeof</span> TeleportImpl<span class="token punctuation">)</span><span class="token punctuation">.</span><span class="token function">process</span><span class="token punctuation">(</span>
+    n1 <span class="token keyword">as</span> TeleportVNode<span class="token punctuation">,</span>
+    n2 <span class="token keyword">as</span> TeleportVNode<span class="token punctuation">,</span>
+    container<span class="token punctuation">,</span>
+    anchor<span class="token punctuation">,</span>
+    parentComponent<span class="token punctuation">,</span>
+    parentSuspense<span class="token punctuation">,</span>
+    isSVG<span class="token punctuation">,</span>
+    slotScopeIds<span class="token punctuation">,</span>
+    optimized<span class="token punctuation">,</span>
+    internals
+  <span class="token punctuation">)</span>
+</code></pre></div><p>而TeleportImpl.process大致可以分为一下四个步骤：</p> <ol><li>创建并挂载注释节点。创建两个注释类型的 VNode  挂在到 teleport 的父节点上</li></ol> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 生成前后注释节点</span>
+<span class="token keyword">const</span> placeholder <span class="token operator">=</span> <span class="token punctuation">(</span>n2<span class="token punctuation">.</span>el <span class="token operator">=</span> __DEV__
+  <span class="token operator">?</span> <span class="token function">createComment</span><span class="token punctuation">(</span><span class="token string">'teleport start'</span><span class="token punctuation">)</span>
+  <span class="token operator">:</span> <span class="token function">createText</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> mainAnchor <span class="token operator">=</span> <span class="token punctuation">(</span>n2<span class="token punctuation">.</span>anchor <span class="token operator">=</span> __DEV__
+  <span class="token operator">?</span> <span class="token function">createComment</span><span class="token punctuation">(</span><span class="token string">'teleport end'</span><span class="token punctuation">)</span>
+  <span class="token operator">:</span> <span class="token function">createText</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token comment">// 插入注释节点</span>
+<span class="token function">insert</span><span class="token punctuation">(</span>placeholder<span class="token punctuation">,</span> container<span class="token punctuation">,</span> anchor<span class="token punctuation">)</span>
+<span class="token function">insert</span><span class="token punctuation">(</span>mainAnchor<span class="token punctuation">,</span> container<span class="token punctuation">,</span> anchor<span class="token punctuation">)</span>
+</code></pre></div><ol start="2"><li>挂载 target 节点和占位节点, 判断 teleport 组件对应 target 的 DOM 节点是否存在，存在则插入一个空的文本节点。</li></ol> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 判断 teleport 组件对应 target 的 DOM 节点是否存在，存在则插入一个空的文本节点</span>
+<span class="token keyword">const</span> target <span class="token operator">=</span> <span class="token punctuation">(</span>n2<span class="token punctuation">.</span>target <span class="token operator">=</span> <span class="token function">resolveTarget</span><span class="token punctuation">(</span>n2<span class="token punctuation">.</span>props<span class="token punctuation">,</span> querySelector<span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">const</span> targetAnchor <span class="token operator">=</span> <span class="token punctuation">(</span>n2<span class="token punctuation">.</span>targetAnchor <span class="token operator">=</span> <span class="token function">createText</span><span class="token punctuation">(</span><span class="token string">''</span><span class="token punctuation">)</span><span class="token punctuation">)</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">insert</span><span class="token punctuation">(</span>targetAnchor<span class="token punctuation">,</span> target<span class="token punctuation">)</span>
+  <span class="token comment">// #2652 we could be teleporting from a non-SVG tree into an SVG tree</span>
+  isSVG <span class="token operator">=</span> isSVG <span class="token operator">||</span> <span class="token function">isTargetSVG</span><span class="token punctuation">(</span>target<span class="token punctuation">)</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__ <span class="token operator">&amp;&amp;</span> <span class="token operator">!</span>disabled<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">warn</span><span class="token punctuation">(</span><span class="token string">'Invalid Teleport target on mount:'</span><span class="token punctuation">,</span> target<span class="token punctuation">,</span> <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">typeof</span> target<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span><span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><ol start="3"><li>定义挂载函数  mount，来为 teleport 组件进行特定的挂载操作。本质上还是调用 mountChildren</li></ol> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">const</span> <span class="token function-variable function">mount</span> <span class="token operator">=</span> <span class="token punctuation">(</span><span class="token parameter"><span class="token literal-property property">container</span><span class="token operator">:</span> RendererElement<span class="token punctuation">,</span> <span class="token literal-property property">anchor</span><span class="token operator">:</span> RendererNode</span><span class="token punctuation">)</span> <span class="token operator">=&gt;</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Teleport *always* has Array children. This is enforced in both the</span>
+  <span class="token comment">// compiler and vnode children normalization.</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> ShapeFlags<span class="token punctuation">.</span><span class="token constant">ARRAY_CHILDREN</span><span class="token punctuation">)</span> <span class="token punctuation">{</span> <span class="token comment">// 判断 shapflags 是否为数组</span>
+    <span class="token function">mountChildren</span><span class="token punctuation">(</span>
+      children <span class="token keyword">as</span> VNodeArrayChildren<span class="token punctuation">,</span> <span class="token comment">// teleport 的子元素必须为数组</span>
+      container<span class="token punctuation">,</span>
+      anchor<span class="token punctuation">,</span> <span class="token comment">// anchor 是一个锚点，用来标识当我们对新旧节点做增删或移动等操作时，以哪个节点为参照物</span>
+      parentComponent<span class="token punctuation">,</span>
+      parentSuspense<span class="token punctuation">,</span>
+      isSVG<span class="token punctuation">,</span>
+      slotScopeIds<span class="token punctuation">,</span>
+      optimized
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div><ol start="4"><li>根据 disabled 来处理不同的逻辑</li></ol> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">if</span> <span class="token punctuation">(</span>disabled<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">mount</span><span class="token punctuation">(</span>container<span class="token punctuation">,</span> mainAnchor<span class="token punctuation">)</span> <span class="token comment">// 挂在注释节点到父容器中</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>target<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">mount</span><span class="token punctuation">(</span>target<span class="token punctuation">,</span> targetAnchor<span class="token punctuation">)</span> <span class="token comment">// 挂在占位节点到 target</span>
+<span class="token punctuation">}</span>
+</code></pre></div><h3 id="更新时"><a href="#更新时" class="header-anchor">#</a> 更新时</h3> <p>当  teleport  的  to 值发生变化时，再次触发TeleportImpl.process ，此时判断 props.to  是否发生了变化，如果发生变化，则调用 moveTeleport 方法进行移动</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// target changed</span>
+<span class="token comment">// disabled 为 false，判断 to 是否发生变化,如果新旧 to 的值不同，则需要对内容进行移动</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token punctuation">(</span>n2<span class="token punctuation">.</span>props <span class="token operator">&amp;&amp;</span> n2<span class="token punctuation">.</span>props<span class="token punctuation">.</span>to<span class="token punctuation">)</span> <span class="token operator">!==</span> <span class="token punctuation">(</span>n1<span class="token punctuation">.</span>props <span class="token operator">&amp;&amp;</span> n1<span class="token punctuation">.</span>props<span class="token punctuation">.</span>to<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token keyword">const</span> nextTarget <span class="token operator">=</span> <span class="token punctuation">(</span>n2<span class="token punctuation">.</span>target <span class="token operator">=</span> <span class="token function">resolveTarget</span><span class="token punctuation">(</span>
+    n2<span class="token punctuation">.</span>props<span class="token punctuation">,</span>
+    querySelector
+  <span class="token punctuation">)</span><span class="token punctuation">)</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>nextTarget<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">moveTeleport</span><span class="token punctuation">(</span>
+      n2<span class="token punctuation">,</span>
+      nextTarget<span class="token punctuation">,</span>
+      <span class="token keyword">null</span><span class="token punctuation">,</span>
+      internals<span class="token punctuation">,</span>
+      TeleportMoveTypes<span class="token punctuation">.</span><span class="token constant">TARGET_CHANGE</span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>__DEV__<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token function">warn</span><span class="token punctuation">(</span>
+      <span class="token string">'Invalid Teleport target on update:'</span><span class="token punctuation">,</span>
+      target<span class="token punctuation">,</span>
+      <span class="token template-string"><span class="token template-punctuation string">`</span><span class="token string">(</span><span class="token interpolation"><span class="token interpolation-punctuation punctuation">${</span><span class="token keyword">typeof</span> target<span class="token interpolation-punctuation punctuation">}</span></span><span class="token string">)</span><span class="token template-punctuation string">`</span></span>
+    <span class="token punctuation">)</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span> <span class="token keyword">else</span> <span class="token keyword">if</span> <span class="token punctuation">(</span>wasDisabled<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// disabled -&gt; enabled</span>
+  <span class="token comment">// move into teleport target</span>
+  <span class="token function">moveTeleport</span><span class="token punctuation">(</span>
+    n2<span class="token punctuation">,</span>
+    target<span class="token punctuation">,</span>
+    targetAnchor<span class="token punctuation">,</span>
+    internals<span class="token punctuation">,</span>
+    TeleportMoveTypes<span class="token punctuation">.</span><span class="token constant">TOGGLE</span>
+  <span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+</code></pre></div><p>moveTeleport：</p> <div class="language-js extra-class"><pre class="language-js"><code><span class="token keyword">export</span> <span class="token keyword">const</span> <span class="token keyword">enum</span> TeleportMoveTypes <span class="token punctuation">{</span>
+  <span class="token constant">TARGET_CHANGE</span><span class="token punctuation">,</span>
+  <span class="token constant">TOGGLE</span><span class="token punctuation">,</span> <span class="token comment">// enable / disable</span>
+  <span class="token constant">REORDER</span> <span class="token comment">// moved in the main view</span>
+<span class="token punctuation">}</span>
+
+<span class="token literal-property property">MoveType</span><span class="token operator">:</span> TeleportMoveTypes
+</code></pre></div><div class="language-js extra-class"><pre class="language-js"><code><span class="token comment">// 插入到目标容器中</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>moveType <span class="token operator">===</span> TeleportMoveTypes<span class="token punctuation">.</span><span class="token constant">TARGET_CHANGE</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">insert</span><span class="token punctuation">(</span>vnode<span class="token punctuation">.</span>targetAnchor<span class="token operator">!</span><span class="token punctuation">,</span> container<span class="token punctuation">,</span> parentAnchor<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+<span class="token keyword">const</span> <span class="token punctuation">{</span> el<span class="token punctuation">,</span> anchor<span class="token punctuation">,</span> shapeFlag<span class="token punctuation">,</span> children<span class="token punctuation">,</span> props <span class="token punctuation">}</span> <span class="token operator">=</span> vnode
+<span class="token keyword">const</span> isReorder <span class="token operator">=</span> moveType <span class="token operator">===</span> TeleportMoveTypes<span class="token punctuation">.</span><span class="token constant">REORDER</span>
+<span class="token comment">// move main view anchor if this is a re-order.</span>
+<span class="token keyword">if</span> <span class="token punctuation">(</span>isReorder<span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token function">insert</span><span class="token punctuation">(</span>el<span class="token operator">!</span><span class="token punctuation">,</span> container<span class="token punctuation">,</span> parentAnchor<span class="token punctuation">)</span>
+<span class="token punctuation">}</span>
+
+<span class="token keyword">if</span> <span class="token punctuation">(</span><span class="token operator">!</span>isReorder <span class="token operator">||</span> <span class="token function">isTeleportDisabled</span><span class="token punctuation">(</span>props<span class="token punctuation">)</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+  <span class="token comment">// Teleport has either Array children or no children.</span>
+  <span class="token keyword">if</span> <span class="token punctuation">(</span>shapeFlag <span class="token operator">&amp;</span> ShapeFlags<span class="token punctuation">.</span><span class="token constant">ARRAY_CHILDREN</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+    <span class="token comment">// 遍历子节点，将子节点移动到目标元素中，此时不再执行渲染，因为第一次进来已经渲染过了</span>
+    <span class="token keyword">for</span> <span class="token punctuation">(</span><span class="token keyword">let</span> i <span class="token operator">=</span> <span class="token number">0</span><span class="token punctuation">;</span> i <span class="token operator">&lt;</span> <span class="token punctuation">(</span>children <span class="token keyword">as</span> VNode<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">.</span>length<span class="token punctuation">;</span> i<span class="token operator">++</span><span class="token punctuation">)</span> <span class="token punctuation">{</span>
+      <span class="token comment">// 调用 渲染器的黑布方法 move将子节点移动到目标元素中</span>
+      <span class="token function">move</span><span class="token punctuation">(</span>
+        <span class="token punctuation">(</span>children <span class="token keyword">as</span> VNode<span class="token punctuation">[</span><span class="token punctuation">]</span><span class="token punctuation">)</span><span class="token punctuation">[</span>i<span class="token punctuation">]</span><span class="token punctuation">,</span>
+        container<span class="token punctuation">,</span>
+        parentAnchor<span class="token punctuation">,</span>
+        MoveType<span class="token punctuation">.</span><span class="token constant">REORDER</span>
+      <span class="token punctuation">)</span>
+    <span class="token punctuation">}</span>
+  <span class="token punctuation">}</span>
+<span class="token punctuation">}</span>
+</code></pre></div></div> <footer class="page-edit"><!----> <!----></footer> <div class="page-nav"><p class="inner"><span class="prev">
+      ←
+      <a href="/studynotes/vueSourceCode/从 patch 方法来看 diff 算法.html" class="prev">
+        从 patch 方法来看 diff 算法
+      </a></span> <span class="next"><a href="/studynotes/vueSourceCode/Vue3 的响应式核心 reactive 和 effect 实现原理以及源码分析.html">
+        Vue3 的响应式核心 reactive 和 effect 实现原理以及源码分析
+      </a>
+      →
+    </span></p></div> </main></div><div class="global-ui"></div></div>
+    <script src="/studynotes/assets/js/app.3d955cb7.js" defer></script><script src="/studynotes/assets/js/2.007e39c9.js" defer></script><script src="/studynotes/assets/js/1.02c32e63.js" defer></script><script src="/studynotes/assets/js/25.831915f1.js" defer></script>
+  </body>
+</html>
